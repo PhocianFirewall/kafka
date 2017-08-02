@@ -179,8 +179,7 @@ public class MockConsumer<K, V> implements Consumer<K, V> {
     public synchronized void addRecord(ConsumerRecord<K, V> record) {
         ensureNotClosed();
         TopicPartition tp = new TopicPartition(record.topic(), record.partition());
-        Set<TopicPartition> currentAssigned = new HashSet<>(this.subscriptions.assignedPartitions());
-        if (!currentAssigned.contains(tp))
+        if (!this.subscriptions.isAssigned(tp))
             throw new IllegalStateException("Cannot add records for a partition that is not assigned to the consumer");
         List<ConsumerRecord<K, V>> recs = this.records.get(tp);
         if (recs == null) {
